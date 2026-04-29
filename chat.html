@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Private Chat</title>
+    
+    <!-- Ссылка на отдельный manifest.json -->
+    <link rel="manifest" href="manifest.json">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        #loginContainer, #chatContainer {
+            background: #1a1a1a;
+            border-radius: 24px;
+            padding: 24px;
+            width: 100%;
+            max-width: 500px;
+        }
+        #chatContainer { display: none; flex-direction: column; max-height: 90vh; }
+        h2, h3 { color: white; margin-bottom: 20px; text-align: center; }
+        input, button {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+        }
+        input {
+            background: #2a2a2a;
+            color: white;
+            border: 1px solid #3a3a3a;
+        }
+        button {
+            background: #2e7d32;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:disabled { opacity: 0.5; }
+        #messages {
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 4px;
+        }
+        .message {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+        .my-message {
+            background: #2e7d32;
+            align-self: flex-end;
+        }
+        .their-message {
+            background: #2a2a2a;
+            align-self: flex-start;
+        }
+        .message-image {
+            max-width: 180px;
+            max-height: 180px;
+            border-radius: 12px;
+            margin-top: 6px;
+            cursor: pointer;
+        }
+        .input-row {
+            display: flex;
+            gap: 8px;
+        }
+        .input-row input { flex: 1; margin-bottom: 0; }
+        .input-row button { width: auto; padding: 14px 20px; margin-bottom: 0; }
+        .status {
+            background: #2a2a2a;
+            color: #0f0;
+            font-size: 11px;
+            padding: 8px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-family: monospace;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div id="loginContainer">
+    <h2>🔒 Приватный чат</h2>
+    <input type="email" id="email" placeholder="Ваш email">
+    <input type="password" id="password" placeholder="Пароль">
+    <input type="email" id="partnerEmail" placeholder="Email собеседника">
+    <button id="loginBtn">Войти</button>
+    <div id="status" class="status">🟡 Готов</div>
+</div>
+
+<div id="chatContainer">
+    <h3 id="partnerDisplay">Чат</h3>
+    <div id="messages"></div>
+    <div class="input-row">
+        <button id="imageButton">📷</button>
+        <input type="text" id="messageInput" placeholder="Сообщение...">
+        <button id="sendButton">📤</button>
+    </div>
+</div>
+
+<script>
+    const SUPABASE_URL = 'https://pouscgfvtehsxjlgujdd.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_xllE2QPyjSQ9gO_ZIp2Ifw_by7GGz9i';
+
+    let currentUser = null;
+    let partnerEmail = '';
+    let sessionToken = '';
+
+    function log(msg, isError = false) {
+        const statusDiv = document.getElementById('status');
+        if (statusDiv) {
+            const line = document.createElement('div');
+            line.textContent = new Date().toLocaleTimeString() + ' ' + msg;
+            line.style.color = isError ? '#ff6b6b' : '#6bff6b';
+            statusDiv.appendChild(line);
+            statusDiv.scrollTop = statusDiv.scrollHeight;
+        }
+        console.log(msg);
+    }
+
+    async function callSupabase(method, path, body = null) {
+        const url = `${SUPABASE_URL}/rest/v1/${path}`;
+        const headers = {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${sessionToken}`,
+            'Content-Type': 'application/json'
+        };
+        
+        const options = { method, headers };
+        if (body) options.body = JSON.stringify(body);
+        
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(`HTTP ${response.status}: ${text.substring(0, 100)}`);
+        }
+        return response;
+    }
+
+    async function uploadImage(file) {
+        const fileName = `${Date.now()}_${file.name}`;
+        const url = `${SUPABASE_URL}/storage/v1/object/chat_images/${fileName}`;
+        
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${sessionToken}`,
+                'Content-Type': file.type
+            },
+            body: file
+        });
+        
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(`Upload failed: ${response.status} ${text}`);
+        }
+        
+        return `${SUPABASE_URL}/storage/v1/object/public/chat_images/${fileName}`;
+    }
+
+    async function sendMessage(text, imageUrl = null) {
+        const btn = document.getElementById('sendButton');
+        btn.disabled = true;
+        
+        try {
+            const messageData = {
+                sender_id: currentUser.email,
+                receiver_id: partnerEmail,
+                content: text || null,
+                image_url: imageUrl || null
+            };
+            
+            await callSupabase('POST', 'messages', messageData);
+            
+            if (text) document.getElementById('messageInput').value = '';
+            log('✅ Отправлено');
+            await loadMessages();
+        } catch (e) {
+            log('❌ Ошибка: ' + e.message, true);
+            alert('Ошибка: ' + e.message);
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    async function sendWithImage(file) {
+        if (!file) return;
+        
+        log('📤 Загрузка изображения...');
+        try {
+            const imageUrl = await uploadImage(file);
+            log('✅ Изображение загружено, отправка...');
+            await sendMessage(null, imageUrl);
+        } catch (e) {
+            log('❌ Ошибка загрузки: ' + e.message, true);
+            alert('Ошибка загрузки: ' + e.message + '\n\nПроверьте, создан ли bucket "chat_images" в Supabase Storage');
+        }
+    }
+
+    async function loadMessages() {
+        if (!currentUser || !partnerEmail) return;
+        
+        try {
+            const response = await callSupabase('GET', 
+                `messages?select=*&order=created_at.asc&sender_id=in.(${currentUser.email},${partnerEmail})&receiver_id=in.(${currentUser.email},${partnerEmail})`);
+            
+            const data = await response.json();
+            
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = '';
+            
+            for (let msg of data) {
+                if ((msg.sender_id === currentUser.email && msg.receiver_id === partnerEmail) ||
+                    (msg.sender_id === partnerEmail && msg.receiver_id === currentUser.email)) {
+                    
+                    const isMe = msg.sender_id === currentUser.email;
+                    const div = document.createElement('div');
+                    div.className = `message ${isMe ? 'my-message' : 'their-message'}`;
+                    
+                    if (msg.image_url) {
+                        const img = document.createElement('img');
+                        img.src = msg.image_url;
+                        img.className = 'message-image';
+                        img.onclick = () => window.open(msg.image_url);
+                        div.appendChild(img);
+                    }
+                    
+                    if (msg.content) {
+                        const textSpan = document.createElement('div');
+                        textSpan.innerText = msg.content;
+                        div.appendChild(textSpan);
+                    }
+                    
+                    if (!msg.content && msg.image_url) {
+                        const label = document.createElement('div');
+                        label.innerText = isMe ? '📷 Я отправил фото' : '📷 Собеседник отправил фото';
+                        label.style.fontSize = '11px';
+                        label.style.opacity = '0.8';
+                        div.appendChild(label);
+                    }
+                    
+                    messagesDiv.appendChild(div);
+                }
+            }
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        } catch (e) {
+            log('Ошибка загрузки: ' + e.message, true);
+        }
+    }
+
+    function setupImagePicker() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                await sendWithImage(file);
+            }
+        };
+        return input;
+    }
+
+    async function login() {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        partnerEmail = document.getElementById('partnerEmail').value.trim();
+        
+        if (!email || !password || !partnerEmail) {
+            alert('Заполните все поля');
+            return;
+        }
+        
+        log('Вход: ' + email);
+        const btn = document.getElementById('loginBtn');
+        btn.disabled = true;
+        btn.textContent = 'Вход...';
+        
+        try {
+            const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.msg || 'Ошибка входа');
+            }
+            
+            const data = await response.json();
+            sessionToken = data.access_token;
+            currentUser = { email: email };
+            
+            log('✅ Успешный вход!');
+            
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('chatContainer').style.display = 'flex';
+            document.getElementById('partnerDisplay').innerHTML = `💬 Чат с ${partnerEmail}`;
+            
+            await loadMessages();
+            
+            setInterval(() => loadMessages(), 3000);
+            
+        } catch (e) {
+            log('❌ Ошибка: ' + e.message, true);
+            alert('Ошибка: ' + e.message + '\n\nПроверьте email и пароль');
+            btn.disabled = false;
+            btn.textContent = 'Войти';
+        }
+    }
+
+    window.addEventListener('load', () => {
+        log('Приложение загружено');
+        
+        document.getElementById('loginBtn').onclick = login;
+        document.getElementById('sendButton').onclick = () => sendMessage(document.getElementById('messageInput').value);
+        document.getElementById('messageInput').onkeypress = (e) => {
+            if (e.key === 'Enter') sendMessage(e.target.value);
+        };
+        
+        const imagePicker = setupImagePicker();
+        document.getElementById('imageButton').onclick = () => imagePicker.click();
+    });
+</script>
+</body>
+</html>
