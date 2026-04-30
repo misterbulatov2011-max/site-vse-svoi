@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ВСЕ СВОИ - Автосалон</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #f9f9fd;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background-image: url('шапка2.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(224, 224, 232, 0.3);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #555;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 8px 0;
+            font-family: 'Montserrat', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1;
+        }
+
+        .nav-links a:not(.catalog-btn)::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #2eb2bd;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:not(.catalog-btn):hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:not(.catalog-btn):hover {
+            color: #2eb2bd;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 770px;
+            background-image: url('file:///C:/Users/1/Desktop/site/deepseek/3.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 100%;
+            text-align: left;
+            position: relative;
+            top: 60px;
+            padding-left: 0;
+            margin-left: -770px;
+            z-index: 10;
+        }
+
+        .hero .btn-primary {
+            display: inline-block;
+            background-color: #2eb2bd;
+            color: white;
+            padding: 14px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            white-space: nowrap;
+        }
+
+        .hero .btn-primary:hover {
+            background-color: #249aa3;
+            transform: scale(1.02);
+        }
+
+        .cars-section {
+            padding: 80px 0;
+            background-image: url('машины2.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        .cars-slider-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            margin-top: 200px;
+            position: relative;
+        }
+
+        .main-swiper {
+            width: 100%;
+            height: auto;
+            padding: 20px 0 60px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .main-swiper .swiper-slide {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(224, 224, 232, 0.5);
+        }
+
+        .main-swiper .swiper-slide:hover {
+            transform: translateY(-8px);
+            border-color: #2eb2bd;
+            box-shadow: 0 15px 35px rgba(46, 178, 189, 0.2);
+        }
+
+        /* ВЛОЖЕННЫЙ СЛАЙДЕР ФОТО */
+        .photo-slider {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+
+        .photo-slider .swiper-slide {
+            background: none;
+            border: none;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .car-image-slide {
+            height: 260px;
+            background: linear-gradient(135deg, #2eb2bd 0%, #1a8a94 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 64px;
+        }
+
+        .photo-slider .swiper-button-next,
+        .photo-slider .swiper-button-prev {
+            color: white;
+            background: rgba(0,0,0,0.5);
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .photo-slider .swiper-button-next:hover,
+        .photo-slider .swiper-button-prev:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        .photo-slider .swiper-button-next:after,
+        .photo-slider .swiper-button-prev:after {
+            font-size: 14px;
+        }
+
+        .photo-slider .swiper-pagination-bullet {
+            background: white;
+            opacity: 0.7;
+        }
+
+        .photo-slider .swiper-pagination-bullet-active {
+            background: #2eb2bd;
+            opacity: 1;
+        }
+
+        .car-info-slide {
+            padding: 20px;
+            background: white;
+        }
+
+        .car-name-slide {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .car-details-slide {
+            color: #777;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .car-price-slide {
+            font-size: 28px;
+            font-weight: 800;
+            color: #2eb2bd;
+            margin: 15px 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-details-slide {
+            display: inline-block;
+            background-color: transparent;
+            color: #2eb2bd;
+            border: 2px solid #2eb2bd;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn-details-slide:hover {
+            background-color: #2eb2bd;
+            color: white;
+        }
+
+        .main-swiper .swiper-button-next,
+        .main-swiper .swiper-button-prev {
+            color: #2eb2bd !important;
+            background: white !important;
+            width: 50px !important;
+            height: 50px !important;
+            border-radius: 50% !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .main-swiper .swiper-button-next:after,
+        .main-swiper .swiper-button-prev:after {
+            font-size: 20px !important;
+            font-weight: bold !important;
+        }
+
+        .main-swiper .swiper-button-next:hover,
+        .main-swiper .swiper-button-prev:hover {
+            background: #2eb2bd !important;
+            color: white !important;
+        }
+
+        .main-swiper .swiper-pagination {
+            bottom: 0;
+        }
+
+        .main-swiper .swiper-pagination-bullet {
+            width: 12px;
+            height: 12px;
+            background: #ccc;
+            opacity: 1;
+        }
+
+        .main-swiper .swiper-pagination-bullet-active {
+            background-color: #2eb2bd;
+        }
+
+        .advantages, .contact, .footer {
+            padding: 60px 0;
+        }
+        .advantages { background-color: white; }
+        .contact { background-color: #f9f9fd; }
+        .footer {
+            background-color: #f9f9fd;
+            text-align: center;
+            border-top: 1px solid #e0e0e8;
+            color: #777;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .advantage-card {
+            text-align: center;
+            padding: 30px 20px;
+            background: #f9f9fd;
+            border-radius: 12px;
+            border: 1px solid #e0e0e8;
+            transition: all 0.3s;
+        }
+        .advantage-card:hover {
+            box-shadow: 0 8px 25px rgba(46, 178, 189, 0.1);
+            border-color: #2eb2bd;
+            transform: translateY(-3px);
+        }
+        .advantage-icon { font-size: 48px; margin-bottom: 20px; }
+        .advantage-title { font-size: 22px; font-weight: 700; margin-bottom: 15px; font-family: 'Montserrat', sans-serif; }
+        .advantage-text { color: #777; line-height: 1.6; }
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            margin-top: 40px;
+        }
+        .contact-text { margin-bottom: 20px; color: #555; line-height: 1.6; }
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #2eb2bd;
+            box-shadow: 0 0 0 3px rgba(46, 178, 189, 0.1);
+        }
+        .contact-info {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e8;
+        }
+        .contact-phone {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2eb2bd;
+            margin: 20px 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .contact-address { color: #777; line-height: 1.8; }
+        
+        @media (max-width: 768px) {
+            .nav { justify-content: center; }
+            .contact-wrapper { grid-template-columns: 1fr; }
+            .section-title { font-size: 28px; }
+            .nav-links { justify-content: center; }
+            .hero { min-height: 500px; }
+            .hero-content {
+                margin-left: 0;
+                top: 30px;
+            }
+            .cars-slider-container {
+                margin-top: 100px;
+            }
+            .main-swiper .swiper-button-next,
+            .main-swiper .swiper-button-prev {
+                width: 36px !important;
+                height: 36px !important;
+            }
+            .car-image-slide {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <div class="nav">
+            <div class="nav-links">
+                <a href="/">ГЛАВНАЯ</a>
+                <a href="/o-nas.html">О НАС</a>
+                <a href="/avtomobili.html">АВТОМОБИЛИ</a>
+                <a href="/uslugi.html">УСЛУГИ</a>
+                <a href="/kontakty.html">КОНТАКТЫ</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <a href="/katalog-avto.html" class="btn-primary">КАТАЛОГ АВТО</a>
+        </div>
+    </div>
+</section>
+
+<section class="cars-section">
+    <div class="cars-slider-container">
+        <div class="swiper main-swiper">
+            <div class="swiper-wrapper">
+                
+                <div class="swiper-slide">
+                    <div class="swiper photo-slider">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide"><div class="car-image-slide">🚗 Kia Sorento - вид спереди</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">🚗 Kia Sorento - вид сбоку</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">🚗 Kia Sorento - салон</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">🚗 Kia Sorento - багажник</div></div>
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                    <div class="car-info-slide">
+                        <h3 class="car-name-slide">Kia Sorento 2021</h3>
+                        <div class="car-details-slide">2.5 л, Атмосфера, 2400 км</div>
+                        <div class="car-price-slide">3,120,000 ₽</div>
+                        <a href="#" class="btn-details-slide">ПОДРОБНЕЕ</a>
+                    </div>
+                </div>
+                
+                <div class="swiper-slide">
+                    <div class="swiper photo-slider">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide"><div class="car-image-slide">🚙 Hyundai Sonata - вид спереди</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">🚙 Hyundai Sonata - вид сбоку</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">🚙 Hyundai Sonata - салон</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">🚙 Hyundai Sonata - багажник</div></div>
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                    <div class="car-info-slide">
+                        <h3 class="car-name-slide">Hyundai Sonata 2022</h3>
+                        <div class="car-details-slide">2.5 л, Автомат, 1100 км</div>
+                        <div class="car-price-slide">2,590,000 ₽</div>
+                        <a href="#" class="btn-details-slide">ПОДРОБНЕЕ</a>
+                    </div>
+                </div>
+                
+                <div class="swiper-slide">
+                    <div class="swiper photo-slider">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide"><div class="car-image-slide">⭐ Mercedes - вид спереди</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">⭐ Mercedes - вид сбоку</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">⭐ Mercedes - салон</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">⭐ Mercedes - багажник</div></div>
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                    <div class="car-info-slide">
+                        <h3 class="car-name-slide">Mercedes-Benz E 300</h3>
+                        <div class="car-details-slide">2.0 л, Турбо, 7900 км</div>
+                        <div class="car-price-slide">5,950,000 ₽</div>
+                        <a href="#" class="btn-details-slide">ПОДРОБНЕЕ</a>
+                    </div>
+                </div>
+                
+                <div class="swiper-slide">
+                    <div class="swiper photo-slider">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide"><div class="car-image-slide">🏎️ BMW X5 - вид спереди</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">🏎️ BMW X5 - вид сбоку</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">🏎️ BMW X5 - салон</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">🏎️ BMW X5 - багажник</div></div>
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                    <div class="car-info-slide">
+                        <h3 class="car-name-slide">BMW X5 2023</h3>
+                        <div class="car-details-slide">3.0 л, Турбо, 5000 км</div>
+                        <div class="car-price-slide">7,890,000 ₽</div>
+                        <a href="#" class="btn-details-slide">ПОДРОБНЕЕ</a>
+                    </div>
+                </div>
+                
+                <div class="swiper-slide">
+                    <div class="swiper photo-slider">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide"><div class="car-image-slide">🚘 Audi Q7 - вид спереди</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">🚘 Audi Q7 - вид сбоку</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">🚘 Audi Q7 - салон</div></div>
+                            <div class="swiper-slide"><div class="car-image-slide">🚘 Audi Q7 - багажник</div></div>
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                    <div class="car-info-slide">
+                        <h3 class="car-name-slide">Audi Q7 2022</h3>
+                        <div class="car-details-slide">3.0 л, Автомат, 12000 км</div>
+                        <div class="car-price-slide">6,450,000 ₽</div>
+                        <a href="#" class="btn-details-slide">ПОДРОБНЕЕ</a>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+</section>
+
+<section class="advantages">
+    <div class="container">
+        <h2 class="section-title">ПОЧЕМУ МЫ?</h2>
+        <div class="advantages-grid">
+            <div class="advantage-card"><div class="advantage-icon">🔍</div><h3 class="advantage-title">ПОДБОР АВТОМОБИЛЯ</h3><p class="advantage-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac massa id sapien ultricies.</p></div>
+            <div class="advantage-card"><div class="advantage-icon">💰</div><h3 class="advantage-title">ОЦЕНКА ВАШЕГО АВТО</h3><p class="advantage-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac massa id sapien ultricies.</p></div>
+            <div class="advantage-card"><div class="advantage-icon">🔄</div><h3 class="advantage-title">ОБМЕН TRADE-IN</h3><p class="advantage-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac massa id sapien ultricies.</p></div>
+            <div class="advantage-card"><div class="advantage-icon">🏦</div><h3 class="advantage-title">АВТОКРЕДИТОВАНИЕ</h3><p class="advantage-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac massa id sapien ultricies.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="contact">
+    <div class="container">
+        <h2 class="section-title">СВЯЗАТЬСЯ С НАМИ</h2>
+        <div class="contact-wrapper">
+            <div><p class="contact-text">Выше изобрёте, имея опеде гортать о форма ивена жда приставники</p>
+                <form class="contact-form"><div class="form-group"><input type="text" placeholder="Ваше Имя"></div><div class="form-group"><input type="tel" placeholder="Телефон"></div><button type="submit" class="btn-primary" style="width: fit-content;">ОТПРАВИТЬ</button></form>
+            </div>
+            <div class="contact-info"><div class="contact-phone">+7 (499) 123-45-67</div><div class="contact-address"><p>Телефо в зейнэло</p><p>Адрес: Москва, улица, дом 123</p></div></div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer"><div class="container"><p>© 2024 ВСЕ СВОИ. Все права защищены.</p></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // ОСНОВНОЙ СЛАЙДЕР - переключает МАШИНЫ
+        const mainSwiper = new Swiper('.main-swiper', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            navigation: {
+                nextEl: '.main-swiper .swiper-button-next',
+                prevEl: '.main-swiper .swiper-button-prev',
+            },
+            pagination: {
+                el: '.main-swiper .swiper-pagination',
+                clickable: true,
+            },
+            breakpoints: {
+                640: { slidesPerView: 2, spaceBetween: 20 },
+                1024: { slidesPerView: 3, spaceBetween: 30 },
+            }
+        });
+
+        // ФОТО-СЛАЙДЕРЫ - переключают ТОЛЬКО фото
+        // Используем другой класс для фото-слайдеров
+        document.querySelectorAll('.photo-slider').forEach(function(slider) {
+            new Swiper(slider, {
+                slidesPerView: 1,
+                spaceBetween: 0,
+                loop: true,
+                // ВАЖНО: nested запрещает передачу событий основному слайдеру
+                nested: true,
+                navigation: {
+                    nextEl: slider.querySelector('.swiper-button-next'),
+                    prevEl: slider.querySelector('.swiper-button-prev'),
+                },
+                pagination: {
+                    el: slider.querySelector('.swiper-pagination'),
+                    clickable: true,
+                },
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
