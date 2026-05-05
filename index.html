@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ВСЕ СВОИ - Автосалон</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
+        *:active,
+        *:focus {
+            outline: none;
+        }
+
+        body {
+            font-family: 'Montserrat', 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #f9f9fd;
+            color: #333;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ========== ШАПКА ========== */
+        .header {
+            background-image: url('images/head.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(224, 224, 232, 0.3);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #555;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 8px 0;
+            font-family: 'Montserrat', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1;
+        }
+
+        .nav-links a:not(.catalog-btn)::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #2eb2bd;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:not(.catalog-btn):hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:not(.catalog-btn):hover {
+            color: #2eb2bd;
+        }
+
+        /* ========== ГЛАВНЫЙ БАННЕР ========== */
+        .hero {
+            position: relative;
+            min-height: 770px;
+            background-image: url('images/banner.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 100%;
+            text-align: left;
+            position: relative;
+            top: 60px;
+            padding-left: 0;
+            margin-left: -770px;
+            z-index: 10;
+        }
+
+        .hero .btn-primary {
+            display: inline-block;
+            background-color: #2eb2bd;
+            color: white;
+            padding: 14px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            white-space: nowrap;
+        }
+
+        .hero .btn-primary:hover {
+            background-color: #249aa3;
+            transform: scale(1.02);
+        }
+
+        /* ========== СЛАЙДЕР С КАРТОЧКАМИ МАШИН ========== */
+        .cars-section {
+            padding: 80px 0 60px 0;
+            background-image: url('images/auto.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        .cars-slider-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            margin-top: 80px;
+            position: relative;
+        }
+
+        .main-swiper {
+            width: 100%;
+            height: auto;
+            padding: 20px 0 60px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .main-swiper .swiper-slide {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(224, 224, 232, 0.5);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .main-swiper .swiper-slide:active {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .main-swiper .swiper-slide:hover {
+            transform: translateY(-8px);
+            border-color: #2eb2bd;
+            box-shadow: 0 15px 35px rgba(46, 178, 189, 0.2);
+        }
+
+        .car-image {
+            height: 260px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .car-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .car-image:hover img {
+            transform: scale(1.08);
+        }
+
+        .car-info {
+            padding: 20px;
+            background: white;
+        }
+
+        .car-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-family: 'Montserrat', sans-serif;
+            color: #333;
+        }
+
+        .car-details {
+            color: #777;
+            margin-bottom: 10px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .car-price {
+            font-size: 24px;
+            font-weight: 800;
+            color: #2eb2bd;
+            margin: 15px 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-details {
+            display: inline-block;
+            background-color: transparent;
+            color: #2eb2bd;
+            border: 2px solid #2eb2bd;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-details:hover {
+            background-color: #2eb2bd;
+            color: white;
+        }
+
+        .main-swiper .swiper-button-next,
+        .main-swiper .swiper-button-prev {
+            color: #2eb2bd !important;
+            background: white !important;
+            width: 50px !important;
+            height: 50px !important;
+            border-radius: 50% !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .main-swiper .swiper-button-next:after,
+        .main-swiper .swiper-button-prev:after {
+            font-size: 20px !important;
+            font-weight: bold !important;
+        }
+
+        .main-swiper .swiper-button-next:hover,
+        .main-swiper .swiper-button-prev:hover {
+            background: #2eb2bd !important;
+            color: white !important;
+        }
+
+        .main-swiper .swiper-pagination {
+            bottom: 0;
+        }
+
+        .main-swiper .swiper-pagination-bullet {
+            width: 12px;
+            height: 12px;
+            background: #ccc;
+            opacity: 1;
+        }
+
+        .main-swiper .swiper-pagination-bullet-active {
+            background-color: #2eb2bd;
+        }
+
+        /* ========== КНОПКА ПОКАЗАТЬ ВСЕ ========== */
+        .show-all-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .show-all-btn {
+            display: inline-block;
+            background-color: #2eb2bd;
+            color: white;
+            padding: 12px 35px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .show-all-btn:hover {
+            background-color: #249aa3;
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(46, 178, 189, 0.3);
+        }
+
+        /* ========== БЛОК ПРЕИМУЩЕСТВ ========== */
+        .advantages {
+            padding: 80px 0;
+            background-image: url('images/why.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .advantage-card {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 16px;
+            border: 1px solid rgba(224, 224, 232, 0.5);
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .advantage-card:hover {
+            box-shadow: 0 8px 25px rgba(46, 178, 189, 0.15);
+            border-color: #2eb2bd;
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .advantage-image {
+            width: 100%;
+            height: 180px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .advantage-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .advantage-card:hover .advantage-image img {
+            transform: scale(1.05);
+        }
+
+        .advantage-text {
+            color: #444;
+            line-height: 1.6;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* ========== БЛОК КОНТАКТОВ ========== */
+        .contact {
+            padding: 60px 0;
+            background-color: #f9f9fd;
+        }
+
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            margin-top: 40px;
+        }
+
+        .contact-info-left {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e8;
+        }
+
+        .contact-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #333;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .contact-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #2eb2bd;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .contact-icon {
+            width: 45px;
+            height: 45px;
+            background: #eef2f5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .contact-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: #2eb2bd;
+            stroke-width: 1.7;
+            fill: none;
+        }
+
+        .contact-text {
+            flex: 1;
+        }
+
+        .contact-text h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #888;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .contact-text p {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .contact-text a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-text a:hover {
+            color: #2eb2bd;
+        }
+
+        .social-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #888;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Стили для иконок соцсетей */
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            background: #eef2f5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #2eb2bd;
+        }
+
+         .social-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            transition: all 0.3s;
+        }
+
+
+        .social-icon:hover {
+            background: #2eb2bd;
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        /* Иконка VK — бирюзовая */
+.vk-icon {
+    width: 24px;
+    height: 24px;
+    transition: all 0.3s;
+    filter: brightness(0) saturate(100%) invert(41%) sepia(89%) saturate(427%) hue-rotate(125deg) brightness(91%) contrast(91%);
+}
+
+/* При наведении на кнопку — иконка становится белой */
+.social-icon:hover .vk-icon {
+    filter: brightness(0) invert(1);
+}
+
+        .contact-map {
+            background: white;
+            padding: 10px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e8;
+            overflow: hidden;
+        }
+
+        .contact-map iframe {
+            width: 100%;
+            height: 450px;
+            border: 0;
+            border-radius: 12px;
+        }
+
+        /* ========== МОДАЛЬНОЕ ОКНО ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            user-select: none;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 800px;
+            width: 95%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            background: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .modal-close:hover {
+            background: #2eb2bd;
+            color: white;
+        }
+
+        .modal-swiper {
+            width: 100%;
+            height: 280px;
+        }
+
+        .modal-swiper .swiper-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1a1a2e;
+        }
+
+        .modal-swiper .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        .modal-swiper .swiper-button-next,
+        .modal-swiper .swiper-button-prev {
+            color: white;
+            background: rgba(0,0,0,0.5);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .modal-swiper .swiper-button-next:after,
+        .modal-swiper .swiper-button-prev:after {
+            font-size: 14px;
+        }
+
+        .modal-swiper .swiper-pagination-bullet {
+            background: white;
+            opacity: 0.7;
+        }
+
+        .modal-swiper .swiper-pagination-bullet-active {
+            background: #2eb2bd;
+        }
+
+        .modal-car-info {
+            padding: 15px 20px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .modal-car-name {
+            font-size: 20px;
+            font-weight: 800;
+            color: #333;
+        }
+
+        .modal-car-price {
+            font-size: 22px;
+            font-weight: 800;
+            color: #2eb2bd;
+        }
+
+        .modal-specs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .spec-item {
+            background: #f5f5f5;
+            padding: 10px 8px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .spec-label {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .spec-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2eb2bd;
+        }
+
+        /* ========== ФУТЕР ========== */
+        .footer {
+            background-color: #f9f9fd;
+            text-align: center;
+            border-top: 1px solid #e0e0e8;
+            color: #777;
+            font-family: 'Montserrat', sans-serif;
+            padding: 30px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .nav { justify-content: center; }
+            .contact-wrapper { grid-template-columns: 1fr; }
+            .nav-links { justify-content: center; }
+            .hero { min-height: 500px; }
+            .hero-content {
+                margin-left: 0;
+                top: 30px;
+            }
+            .cars-slider-container {
+                margin-top: 40px;
+            }
+            .main-swiper .swiper-button-next,
+            .main-swiper .swiper-button-prev {
+                width: 36px !important;
+                height: 36px !important;
+            }
+            .modal-swiper {
+                height: 200px;
+            }
+            .modal-specs {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .modal-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .advantages-grid {
+                gap: 20px;
+            }
+            .advantage-image {
+                height: 150px;
+            }
+            .contact-info-left {
+                padding: 25px;
+            }
+            .contact-title {
+                font-size: 24px;
+            }
+            .contact-text p {
+                font-size: 16px;
+            }
+            .contact-map iframe {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <div class="nav">
+            <div class="nav-links">
+                <a href="/">ГЛАВНАЯ</a>
+                <a href="/o-nas.html">О НАС</a>
+                <a href="/avtomobili.html">АВТОМОБИЛИ</a>
+                <a href="/uslugi.html">УСЛУГИ</a>
+                <a href="/kontakty.html">КОНТАКТЫ</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <a href="/katalog-avto.html" class="btn-primary">КАТАЛОГ АВТО</a>
+        </div>
+    </div>
+</section>
+
+<!-- СЛАЙДЕР МАШИН -->
+<section class="cars-section">
+    <div class="cars-slider-container">
+        <div class="swiper main-swiper">
+            <div class="swiper-wrapper">
+                
+                <div class="swiper-slide" data-car-id="car1">
+                    <div class="car-image">
+                        <img src="images/auto/kia_sorento_1.jpg" alt="Kia Sorento" onerror="this.src='https://placehold.co/400x260/2eb2bd/white?text=Kia+Sorento'">
+                    </div>
+                    <div class="car-info">
+                        <h3 class="car-name">Kia Sorento 2021</h3>
+                        <div class="car-details">2.5 л ● Атмосферный ● 2400 км</div>
+                        <div class="car-price">3,120,000 ₽</div>
+                        <button class="btn-details" data-car="car1">ПОДРОБНЕЕ</button>
+                    </div>
+                </div>
+                
+                <div class="swiper-slide" data-car-id="car2">
+                    <div class="car-image">
+                        <img src="images/auto/hyundai_sonata_1.jpg" alt="Hyundai Sonata" onerror="this.src='https://placehold.co/400x260/2eb2bd/white?text=Hyundai+Sonata'">
+                    </div>
+                    <div class="car-info">
+                        <h3 class="car-name">Hyundai Sonata 2022</h3>
+                        <div class="car-details">2.5 л ● Автомат ● 1100 км</div>
+                        <div class="car-price">2,590,000 ₽</div>
+                        <button class="btn-details" data-car="car2">ПОДРОБНЕЕ</button>
+                    </div>
+                </div>
+                
+                <div class="swiper-slide" data-car-id="car3">
+                    <div class="car-image">
+                        <img src="images/auto/mercedes_1.jpg" alt="Mercedes-Benz E 300" onerror="this.src='https://placehold.co/400x260/2eb2bd/white?text=Mercedes+E+300'">
+                    </div>
+                    <div class="car-info">
+                        <h3 class="car-name">Mercedes-Benz E 300</h3>
+                        <div class="car-details">2.0 л ● Турбо ● 7900 км</div>
+                        <div class="car-price">5,950,000 ₽</div>
+                        <button class="btn-details" data-car="car3">ПОДРОБНЕЕ</button>
+                    </div>
+                </div>
+                
+                <div class="swiper-slide" data-car-id="car4">
+                    <div class="car-image">
+                        <img src="images/auto/bmw_x5_1.jpg" alt="BMW X5" onerror="this.src='https://placehold.co/400x260/2eb2bd/white?text=BMW+X5'">
+                    </div>
+                    <div class="car-info">
+                        <h3 class="car-name">BMW X5 2023</h3>
+                        <div class="car-details">3.0 л ● Турбо ● 5000 км</div>
+                        <div class="car-price">7,890,000 ₽</div>
+                        <button class="btn-details" data-car="car4">ПОДРОБНЕЕ</button>
+                    </div>
+                </div>
+                
+                <div class="swiper-slide" data-car-id="car5">
+                    <div class="car-image">
+                        <img src="images/auto/audi_q7_1.jpg" alt="Audi Q7" onerror="this.src='https://placehold.co/400x260/2eb2bd/white?text=Audi+Q7'">
+                    </div>
+                    <div class="car-info">
+                        <h3 class="car-name">Audi Q7 2022</h3>
+                        <div class="car-details">3.0 л ● Автомат ● 12000 км</div>
+                        <div class="car-price">6,450,000 ₽</div>
+                        <button class="btn-details" data-car="car5">ПОДРОБНЕЕ</button>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+    
+    <div class="show-all-container">
+        <a href="/avtomobili.html" class="show-all-btn">Показать все автомобили →</a>
+    </div>
+</section>
+
+<!-- БЛОК ПРЕИМУЩЕСТВ -->
+<section class="advantages">
+    <div class="container">
+        <div class="advantages-grid">
+            <div class="advantage-card">
+                <div class="advantage-image">
+                    <img src="images/podbor.jpg" alt="Подбор автомобиля" onerror="this.src='https://placehold.co/300x180/2eb2bd/white?text=Подбор+автомобиля'">
+                </div>
+                <p class="advantage-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac massa id sapien ultricies.</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-image">
+                    <img src="images/ozenka.jpg" alt="Оценка вашего авто" onerror="this.src='https://placehold.co/300x180/2eb2bd/white?text=Оценка+вашего+авто'">
+                </div>
+                <p class="advantage-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac massa id sapien ultricies.</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-image">
+                    <img src="images/trade-in.jpg" alt="Обмен Trade-in" onerror="this.src='https://placehold.co/300x180/2eb2bd/white?text=Обмен+Trade-in'">
+                </div>
+                <p class="advantage-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac massa id sapien ultricies.</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-image">
+                    <img src="images/kredit.jpg" alt="Автокредитование" onerror="this.src='https://placehold.co/300x180/2eb2bd/white?text=Автокредитование'">
+                </div>
+                <p class="advantage-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac massa id sapien ultricies.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- БЛОК КОНТАКТОВ (с новыми иконками VK и Telegram) -->
+<section class="contact">
+    <div class="container">
+        <div class="contact-wrapper">
+            <div class="contact-info-left">
+                <h2 class="contact-title">СВЯЗАТЬСЯ С НАМИ</h2>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" fill="none">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                    </div>
+                    <div class="contact-text">
+                        <h4>ТЕЛЕФОН</h4>
+                        <p><a href="tel:+74991234567">+7 (962) 759-93-33; +7 (8442) 60-93-33</a></p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" fill="none">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                    </div>
+                    <div class="contact-text">
+                        <h4>АДРЕС</h4>
+                        <p>г. Волгоград, Советский район        - парковка, ТЦ Лента</p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" fill="none">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <div class="contact-text">
+                        <h4>ВРЕМЯ РАБОТЫ</h4>
+                        <p>Ежедневно: 10:00 – 20:00</p>
+                    </div>
+                </div>
+                
+                <div class="social-title">МЫ В СОЦСЕТЯХ</div>
+                <div class="social-icons">
+                    <!-- Иконка VK -->
+                    <a href="https://vk.com/vse_svoi_vlg" class="social-icon" aria-label="ВКонтакте">
+    <img src="https://img.icons8.com/ios/50/vk-circled--v1.png" alt="VK" class="vk-icon">
+</a>
+                    <!-- Иконка Telegram (бумажный самолётик) -->
+                    <a href="#" class="social-icon" aria-label="Telegram">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20.5 4.5L2.5 10.5L8.5 13.5M20.5 4.5L14.5 20.5L8.5 13.5M20.5 4.5L8.5 13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M10.5 18.5L8.5 13.5L16.5 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="contact-map">
+                <iframe 
+                    src="https://yandex.com/map-widget/v1/?um=constructor%3A1a2b3c4d5e6f7g8h9i0j&amp;source=constructor" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <p>© 2024 ВСЕ СВОИ. Все права защищены.</p>
+    </div>
+</footer>
+
+<!-- МОДАЛЬНОЕ ОКНО -->
+<div id="carModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <div class="swiper modal-swiper">
+            <div class="swiper-wrapper" id="modalImages"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <div class="modal-car-info">
+            <div class="modal-header">
+                <h2 class="modal-car-name" id="modalCarName"></h2>
+                <div class="modal-car-price" id="modalCarPrice"></div>
+            </div>
+            <div class="modal-specs" id="modalSpecs"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    // ========== ДАННЫЕ ДЛЯ 5 МАШИН ==========
+    const carsData = {
+        car1: {
+            name: "Kia Sorento 2021",
+            price: "3,120,000 ₽",
+            specs: [
+                { label: "Поколение", value: "IV (MQ4)" },
+                { label: "Пробег", value: "2 400 км" },
+                { label: "Владельцев", value: "1" },
+                { label: "Модификация", value: "2.5 GDI" },
+                { label: "Объём", value: "2.5 л" },
+                { label: "Тип двигателя", value: "Атмосферный" },
+                { label: "Коробка", value: "Автомат 8 ст." },
+                { label: "Привод", value: "Полный" },
+                { label: "Комплектация", value: "Premium" },
+                { label: "Кузов", value: "Кроссовер" },
+                { label: "Цвет", value: "Белый" },
+                { label: "Руль", value: "Левый" }
+            ],
+            images: [
+                "images/auto/kia_sorento_1.jpg",
+                "images/auto/kia_sorento_2.jpg",
+                "images/auto/kia_sorento_3.jpg",
+                "images/auto/kia_sorento_interior.jpg"
+            ]
+        },
+        car2: {
+            name: "Hyundai Sonata 2022",
+            price: "2,590,000 ₽",
+            specs: [
+                { label: "Поколение", value: "VIII (DN8)" },
+                { label: "Пробег", value: "1 100 км" },
+                { label: "Владельцев", value: "1" },
+                { label: "Модификация", value: "2.5 MPI" },
+                { label: "Объём", value: "2.5 л" },
+                { label: "Тип двигателя", value: "Атмосферный" },
+                { label: "Коробка", value: "Автомат 6 ст." },
+                { label: "Привод", value: "Передний" },
+                { label: "Комплектация", value: "Business" },
+                { label: "Кузов", value: "Седан" },
+                { label: "Цвет", value: "Тёмно-синий" },
+                { label: "Руль", value: "Левый" }
+            ],
+            images: [
+                "images/auto/hyundai_sonata_1.jpg",
+                "images/auto/hyundai_sonata_2.jpg",
+                "images/auto/hyundai_sonata_3.jpg",
+                "images/auto/hyundai_sonata_interior.jpg"
+            ]
+        },
+        car3: {
+            name: "Mercedes-Benz E 300",
+            price: "5,950,000 ₽",
+            specs: [
+                { label: "Поколение", value: "W213 рестайлинг" },
+                { label: "Пробег", value: "7 900 км" },
+                { label: "Владельцев", value: "1" },
+                { label: "Модификация", value: "E 300" },
+                { label: "Объём", value: "2.0 л" },
+                { label: "Тип двигателя", value: "Турбо" },
+                { label: "Коробка", value: "Автомат 9G-TRONIC" },
+                { label: "Привод", value: "Задний" },
+                { label: "Комплектация", value: "AMG Line" },
+                { label: "Кузов", value: "Седан" },
+                { label: "Цвет", value: "Чёрный" },
+                { label: "Руль", value: "Левый" }
+            ],
+            images: [
+                "images/auto/mercedes_1.jpg",
+                "images/auto/mercedes_2.jpg",
+                "images/auto/mercedes_3.jpg",
+                "images/auto/mercedes_interior.jpg"
+            ]
+        },
+        car4: {
+            name: "BMW X5 2023",
+            price: "7,890,000 ₽",
+            specs: [
+                { label: "Поколение", value: "G05 рестайлинг" },
+                { label: "Пробег", value: "5 000 км" },
+                { label: "Владельцев", value: "1" },
+                { label: "Модификация", value: "xDrive40i" },
+                { label: "Объём", value: "3.0 л" },
+                { label: "Тип двигателя", value: "Турбо" },
+                { label: "Коробка", value: "Автомат 8 ст." },
+                { label: "Привод", value: "Полный xDrive" },
+                { label: "Комплектация", value: "M Sport" },
+                { label: "Кузов", value: "Кроссовер" },
+                { label: "Цвет", value: "Минерал Уайт" },
+                { label: "Руль", value: "Левый" }
+            ],
+            images: [
+                "images/auto/bmw_x5_1.jpg",
+                "images/auto/bmw_x5_2.jpg",
+                "images/auto/bmw_x5_3.jpg",
+                "images/auto/bmw_x5_interior.jpg"
+            ]
+        },
+        car5: {
+            name: "Audi Q7 2022",
+            price: "6,450,000 ₽",
+            specs: [
+                { label: "Поколение", value: "II (4M)" },
+                { label: "Пробег", value: "12 000 км" },
+                { label: "Владельцев", value: "1" },
+                { label: "Модификация", value: "45 TDI" },
+                { label: "Объём", value: "3.0 л" },
+                { label: "Тип двигателя", value: "Турбодизель" },
+                { label: "Коробка", value: "Автомат 8 ст." },
+                { label: "Привод", value: "Полный quattro" },
+                { label: "Комплектация", value: "Business" },
+                { label: "Кузов", value: "Кроссовер" },
+                { label: "Цвет", value: "Navarra Blue" },
+                { label: "Руль", value: "Левый" }
+            ],
+            images: [
+                "images/auto/audi_q7_1.jpg",
+                "images/auto/audi_q7_2.jpg",
+                "images/auto/audi_q7_3.jpg",
+                "images/auto/audi_q7_interior.jpg"
+            ]
+        }
+    };
+
+    let modalSwiper = null;
+
+    function openModal(carId) {
+        const car = carsData[carId];
+        if (!car) return;
+
+        document.getElementById('modalCarName').textContent = car.name;
+        document.getElementById('modalCarPrice').textContent = car.price;
+
+        const specsContainer = document.getElementById('modalSpecs');
+        specsContainer.innerHTML = '';
+        car.specs.forEach(spec => {
+            const specDiv = document.createElement('div');
+            specDiv.className = 'spec-item';
+            specDiv.innerHTML = `
+                <div class="spec-label">${spec.label}</div>
+                <div class="spec-value">${spec.value}</div>
+            `;
+            specsContainer.appendChild(specDiv);
+        });
+
+        const imagesContainer = document.getElementById('modalImages');
+        imagesContainer.innerHTML = '';
+        car.images.forEach((imgSrc, index) => {
+            const slide = document.createElement('div');
+            slide.className = 'swiper-slide';
+            slide.innerHTML = `<img src="${imgSrc}" alt="${car.name} фото ${index+1}" onerror="this.src='https://placehold.co/800x450/2eb2bd/white?text=${encodeURIComponent(car.name)}'">`;
+            imagesContainer.appendChild(slide);
+        });
+
+        document.getElementById('carModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        setTimeout(() => {
+            if (modalSwiper) {
+                modalSwiper.destroy(true, true);
+            }
+            modalSwiper = new Swiper('.modal-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 0,
+                loop: true,
+                navigation: {
+                    nextEl: '.modal-swiper .swiper-button-next',
+                    prevEl: '.modal-swiper .swiper-button-prev',
+                },
+                pagination: {
+                    el: '.modal-swiper .swiper-pagination',
+                    clickable: true,
+                },
+            });
+        }, 100);
+    }
+
+    function closeModal() {
+        document.getElementById('carModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.swiper-slide').forEach(slide => {
+        slide.addEventListener('click', (e) => {
+            if (e.target.closest('.btn-details')) return;
+            const carId = slide.getAttribute('data-car-id');
+            if (carId && carsData[carId]) {
+                openModal(carId);
+            }
+        });
+    });
+
+    document.querySelectorAll('.btn-details').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const carId = btn.getAttribute('data-car');
+            if (carId && carsData[carId]) {
+                openModal(carId);
+            }
+        });
+    });
+
+    document.querySelector('.modal-close').addEventListener('click', closeModal);
+    document.getElementById('carModal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('carModal')) {
+            closeModal();
+        }
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.getElementById('carModal').classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const mainSwiper = new Swiper('.main-swiper', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            navigation: {
+                nextEl: '.main-swiper .swiper-button-next',
+                prevEl: '.main-swiper .swiper-button-prev',
+            },
+            pagination: {
+                el: '.main-swiper .swiper-pagination',
+                clickable: true,
+            },
+            breakpoints: {
+                640: { slidesPerView: 2, spaceBetween: 20 },
+                1024: { slidesPerView: 3, spaceBetween: 30 },
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
